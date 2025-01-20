@@ -1806,9 +1806,241 @@ schemas:
     type: object
     $schema: http://json-schema.org/draft-07/schema#
     additionalProperties: true
-    properties: {}
+    properties:
+      archived:
+        type:
+          - "null"
+          - boolean
+      assignee:
+        type:
+          - "null"
+          - string
+      content:
+        type:
+          - "null"
+          - string
+      due_date:
+        type:
+          - "null"
+          - string
+      folder:
+        type:
+          - "null"
+          - object
+        properties:
+          access:
+            type:
+              - "null"
+              - boolean
+          hidden:
+            type:
+              - "null"
+              - boolean
+          id:
+            type:
+              - "null"
+              - string
+          name:
+            type:
+              - "null"
+              - string
+      id:
+        type:
+          - "null"
+          - string
+      name:
+        type:
+          - "null"
+          - string
+      orderindex:
+        type:
+          - "null"
+          - integer
+      override_statuses:
+        type:
+          - "null"
+          - boolean
+      permission_level:
+        type:
+          - "null"
+          - string
+      priority:
+        type:
+          - "null"
+          - string
+      space:
+        type:
+          - "null"
+          - object
+        properties:
+          access:
+            type:
+              - "null"
+              - boolean
+          id:
+            type:
+              - "null"
+              - string
+          name:
+            type:
+              - "null"
+              - string
+      start_date:
+        type:
+          - "null"
+          - string
+      status:
+        type:
+          - "null"
+          - string
+          - object
+      task_count:
+        type:
+          - "null"
+          - integer
   folderless_list_task:
     type: object
     $schema: http://json-schema.org/draft-07/schema#
     additionalProperties: true
-    properties: {}
+    properties:
+      assignees:
+        type:
+          - "null"
+          - array
+        items:
+          type:
+            - "null"
+            - object
+      checklists:
+        type:
+          - "null"
+          - array
+        items:
+          type:
+            - "null"
+            - object
+      creator:
+        type:
+          - "null"
+          - object
+        properties:
+          color:
+            type:
+              - "null"
+              - string
+          id:
+            type:
+              - "null"
+              - integer
+          profilePicture:
+            type:
+              - "null"
+              - string
+          username:
+            type:
+              - "null"
+              - string
+      date_closed:
+        type:
+          - "null"
+          - string
+      date_created:
+        type:
+          - "null"
+          - string
+      date_updated:
+        type:
+          - "null"
+          - string
+      due_date:
+        type:
+          - "null"
+          - string
+      folder:
+        type:
+          - "null"
+          - object
+        properties:
+          id:
+            type:
+              - "null"
+              - string
+      id:
+        type:
+          - "null"
+          - string
+      list:
+        type: object
+        properties:
+          id:
+            type:
+              - "null"
+              - string
+      name:
+        type:
+          - "null"
+          - string
+      orderindex:
+        type:
+          - "null"
+          - string
+      parent:
+        type:
+          - "null"
+          - string
+      priority:
+        type:
+          - "null"
+          - object
+      space:
+        type: object
+        properties:
+          id:
+            type:
+              - "null"
+              - string
+      start_date:
+        type:
+          - "null"
+          - string
+      status:
+        type:
+          - "null"
+          - object
+        properties:
+          type:
+            type:
+              - "null"
+              - string
+          color:
+            type:
+              - "null"
+              - string
+          orderindex:
+            type:
+              - "null"
+              - integer
+          status:
+            type:
+              - "null"
+              - string
+      tags:
+        type:
+          - "null"
+          - array
+        items:
+          type:
+            - "null"
+            - object
+      time_estimate:
+        type:
+          - "null"
+          - string
+      time_spent:
+        type:
+          - "null"
+          - string
+      url:
+        type:
+          - "null"
+          - string
