@@ -36,7 +36,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -76,7 +77,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -116,7 +118,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -164,7 +167,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -212,7 +216,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -262,7 +267,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -321,7 +327,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -367,7 +374,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -413,7 +421,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -461,7 +470,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -507,7 +517,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -555,7 +566,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -603,7 +615,8 @@ definitions:
                     action: IGNORE
                     http_codes:
                       - 404
-              - backoff_strategies:
+              - type: DefaultErrorHandler
+                backoff_strategies:
                   - type: WaitUntilTimeFromHeader
                     header: X-RateLimit-Reset
         record_selector:
@@ -624,6 +637,119 @@ definitions:
         type: InlineSchemaLoader
         schema:
           $ref: "#/schemas/list_comments"
+    folderless_list:
+      type: DeclarativeStream
+      name: folderless_list
+      primary_key:
+        - id
+      retriever:
+        type: SimpleRetriever
+        requester:
+          $ref: "#/definitions/base_requester"
+          path: space/{{ stream_partition['space_id'] }}/list
+          http_method: GET
+          error_handler:
+            type: CompositeErrorHandler
+            error_handlers:
+              - type: DefaultErrorHandler
+                response_filters:
+                  - type: HttpResponseFilter
+                    action: IGNORE
+                    http_codes:
+                      - 500
+                    error_message: Something wrong with API, Please recheck all ids
+              - type: DefaultErrorHandler
+                response_filters:
+                  - type: HttpResponseFilter
+                    action: IGNORE
+                    http_codes:
+                      - 404
+              - type: DefaultErrorHandler
+                backoff_strategies:
+                  - type: WaitUntilTimeFromHeader
+                    header: X-RateLimit-Reset
+        record_selector:
+          type: RecordSelector
+          extractor:
+            type: DpathExtractor
+            field_path:
+              - lists
+        partition_router:
+          type: SubstreamPartitionRouter
+          parent_stream_configs:
+            - type: ParentStreamConfig
+              parent_key: id
+              partition_field: space_id
+              stream:
+                $ref: "#/definitions/streams/space"
+      schema_loader:
+        type: InlineSchemaLoader
+        schema:
+          $ref: "#/schemas/folderless_list"
+    folderless_list_task:
+      type: DeclarativeStream
+      name: folderless_list_task
+      primary_key:
+        - id
+      retriever:
+        type: SimpleRetriever
+        requester:
+          $ref: "#/definitions/base_requester"
+          path: list/{{ stream_partition['list_id'] }}/task
+          http_method: GET
+          request_parameters:
+            include_closed: "{{ config['include_closed_tasks']|lower }}"
+          error_handler:
+            type: CompositeErrorHandler
+            error_handlers:
+              - type: DefaultErrorHandler
+                response_filters:
+                  - type: HttpResponseFilter
+                    action: IGNORE
+                    http_codes:
+                      - 500
+                    error_message: Something wrong with API, Please recheck all ids
+              - type: DefaultErrorHandler
+                response_filters:
+                  - type: HttpResponseFilter
+                    action: IGNORE
+                    http_codes:
+                      - 404
+              - type: DefaultErrorHandler
+                backoff_strategies:
+                  - type: WaitUntilTimeFromHeader
+                    header: X-RateLimit-Reset
+        record_selector:
+          type: RecordSelector
+          extractor:
+            type: DpathExtractor
+            field_path:
+              - tasks
+        paginator:
+          type: DefaultPaginator
+          page_token_option:
+            type: RequestOption
+            inject_into: request_parameter
+            field_name: page
+          page_size_option:
+            type: RequestOption
+            field_name: page_size
+            inject_into: request_parameter
+          pagination_strategy:
+            type: OffsetIncrement
+            page_size: 1
+        partition_router:
+          type: SubstreamPartitionRouter
+          parent_stream_configs:
+            - type: ParentStreamConfig
+              parent_key: id
+              partition_field: list_id
+              stream:
+                $ref: "#/definitions/streams/folderless_list"
+      schema_loader:
+        type: InlineSchemaLoader
+        schema:
+          $ref: "#/schemas/folderless_list_task"
   base_requester:
     type: HttpRequester
     url_base: https://api.clickup.com/api/v2/
@@ -646,6 +772,8 @@ streams:
   - $ref: "#/definitions/streams/space_tags"
   - $ref: "#/definitions/streams/team_goals"
   - $ref: "#/definitions/streams/list_comments"
+  - $ref: "#/definitions/streams/folderless_list"
+  - $ref: "#/definitions/streams/folderless_list_task"
 
 spec:
   documentation_url: https://docs.airbyte.com/integrations/sources/clickup-api
@@ -689,13 +817,18 @@ metadata:
     space_tags: true
     team_goals: true
     list_comments: true
+    folderless_list: false
+    folderless_list_task: false
   yamlComponents:
+    streams:
+      user:
+        - errorHandler
     global:
       - authenticator
   testedStreams:
     user:
       hasRecords: true
-      streamHash: 7176ff53062a223428ecb44db1db66e578621c5e
+      streamHash: 0354307ca4736ff3e2d25a9ea703574c2264a643
       hasResponse: true
       primaryKeysAreUnique: true
       primaryKeysArePresent: true
@@ -709,14 +842,14 @@ metadata:
       responsesAreSuccessful: true
     list:
       hasRecords: true
-      streamHash: e7a394b78d97097d82d3b6205f00a7776efcb249
+      streamHash: 303657a42a76528e8532ee24dd4b04be318aae4a
       hasResponse: true
       primaryKeysAreUnique: true
       primaryKeysArePresent: true
       responsesAreSuccessful: true
     space:
       hasRecords: true
-      streamHash: 460deeb83e207d5cd0fb55895563c1731c93cd0d
+      streamHash: 918d2412ea821fd2dba5fc1bbbc2c21be954e077
       hasResponse: true
       primaryKeysAreUnique: true
       primaryKeysArePresent: true
@@ -784,6 +917,20 @@ metadata:
       primaryKeysAreUnique: true
       primaryKeysArePresent: true
       responsesAreSuccessful: true
+    folderless_list:
+      streamHash: fb004d4079b816b3ec8708f2c05811b33e4c04f6
+      hasResponse: true
+      responsesAreSuccessful: true
+      hasRecords: true
+      primaryKeysArePresent: true
+      primaryKeysAreUnique: true
+    folderless_list_task:
+      streamHash: ebc868fa9364865160cbfae54c701d17aa574c26
+      hasResponse: true
+      responsesAreSuccessful: true
+      hasRecords: true
+      primaryKeysArePresent: true
+      primaryKeysAreUnique: true
   assist: {}
 
 schemas:
@@ -1655,3 +1802,13 @@ schemas:
               - "null"
     required:
       - id
+  folderless_list:
+    type: object
+    $schema: http://json-schema.org/draft-07/schema#
+    additionalProperties: true
+    properties: {}
+  folderless_list_task:
+    type: object
+    $schema: http://json-schema.org/draft-07/schema#
+    additionalProperties: true
+    properties: {}
