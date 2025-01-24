@@ -700,6 +700,7 @@ definitions:
           http_method: GET
           request_parameters:
             include_closed: "{{ config['include_closed_tasks']|lower }}"
+            subtasks: "true"
           error_handler:
             type: CompositeErrorHandler
             error_handlers:
