@@ -284,13 +284,10 @@ definitions:
             type: RequestOption
             inject_into: request_parameter
             field_name: page
-          page_size_option:
-            type: RequestOption
-            field_name: page_size
-            inject_into: request_parameter
           pagination_strategy:
-            type: OffsetIncrement
-            page_size: 1
+            type: PageIncrement
+            start_from_page: 0
+            inject_on_first_request: true
         partition_router:
           type: SubstreamPartitionRouter
           parent_stream_configs:
@@ -733,13 +730,10 @@ definitions:
             type: RequestOption
             inject_into: request_parameter
             field_name: page
-          page_size_option:
-            type: RequestOption
-            field_name: page_size
-            inject_into: request_parameter
           pagination_strategy:
-            type: OffsetIncrement
-            page_size: 1
+            type: PageIncrement
+            start_from_page: 0
+            inject_on_first_request: true
         partition_router:
           type: SubstreamPartitionRouter
           parent_stream_configs:
