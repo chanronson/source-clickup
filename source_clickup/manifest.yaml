@@ -1437,6 +1437,110 @@ schemas:
         type:
           - array
           - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            type:
+              type:
+                - string
+                - "null"
+            date_created:
+              type:
+                - string
+                - "null"
+            hide_from_guests:
+              type:
+                - boolean
+                - "null"
+            id:
+              type:
+                - string
+                - "null"
+            name:
+              type:
+                - string
+                - "null"
+            required:
+              type:
+                - boolean
+                - "null"
+            type_config:
+              type:
+                - object
+                - "null"
+              properties:
+                default:
+                  type:
+                    - number
+                    - "null"
+                include_guests:
+                  type:
+                    - boolean
+                    - "null"
+                new_drop_down:
+                  type:
+                    - boolean
+                    - "null"
+                options:
+                  type:
+                    - array
+                    - "null"
+                  items:
+                    type:
+                      - object
+                      - "null"
+                    properties:
+                      color:
+                        type:
+                          - string
+                          - "null"
+                      id:
+                        type:
+                          - string
+                          - "null"
+                      label:
+                        type:
+                          - string
+                          - "null"
+                      name:
+                        type:
+                          - string
+                          - "null"
+                      orderindex:
+                        type:
+                          - number
+                          - "null"
+                single_user:
+                  type:
+                    - boolean
+                    - "null"
+                sorting:
+                  type:
+                    - string
+                    - "null"
+            value:
+              anyOf:
+                - type: number
+                - type: array
+                  items:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          color:
+                            type: string
+                          email:
+                            type: string
+                          id:
+                            type: number
+                          initials:
+                            type: string
+                          profilePicture:
+                            type: "null"
+                          username:
+                            type: string
       custom_item_id:
         type:
           - number
