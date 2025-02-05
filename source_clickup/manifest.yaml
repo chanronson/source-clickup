@@ -250,8 +250,8 @@ definitions:
           path: list/{{ stream_partition['list_id'] }}/task
           http_method: GET
           request_parameters:
-            include_closed: "{{ config['include_closed_tasks']|lower }}"
             subtasks: "true"
+            include_closed: "{{ config['include_closed_tasks']|lower }}"
           error_handler:
             type: CompositeErrorHandler
             error_handlers:
@@ -696,8 +696,8 @@ definitions:
           path: list/{{ stream_partition['list_id'] }}/task
           http_method: GET
           request_parameters:
-            include_closed: "{{ config['include_closed_tasks']|lower }}"
             subtasks: "true"
+            include_closed: "{{ config['include_closed_tasks']|lower }}"
           error_handler:
             type: CompositeErrorHandler
             error_handlers:
@@ -772,8 +772,8 @@ streams:
   - $ref: "#/definitions/streams/folderless_list_task"
 
 spec:
-  documentation_url: https://docs.airbyte.com/integrations/sources/clickup-api
   type: Spec
+  documentation_url: https://docs.airbyte.com/integrations/sources/clickup-api  
   connection_specification:
     type: object
     $schema: http://json-schema.org/draft-07/schema#
@@ -805,7 +805,7 @@ metadata:
     list: false
     space: false
     folder: false
-    task: false
+    task: true
     time_tracking_tags: true
     time_tracking: true
     list_custom_fields: true
@@ -814,7 +814,7 @@ metadata:
     team_goals: true
     list_comments: true
     folderless_list: false
-    folderless_list_task: false
+    folderless_list_task: true
   yamlComponents:
     streams:
       user:
@@ -852,18 +852,18 @@ metadata:
       responsesAreSuccessful: true
     folder:
       hasRecords: true
-      streamHash: b6741eb32c353db9d9d4965df443c789e34441f6
+      streamHash: 7378fa098e720e058937693a4ac90cf80e77b9f0
       hasResponse: true
       primaryKeysAreUnique: true
       primaryKeysArePresent: true
       responsesAreSuccessful: true
     task:
-      hasRecords: true
-      streamHash: 62ed778c46b789e6b6301ed5b7a1a628a2f723d6
+      streamHash: 0b6dfe91e4f434519db6ebd84f4619b6af085847
       hasResponse: true
-      primaryKeysAreUnique: true
-      primaryKeysArePresent: true
       responsesAreSuccessful: true
+      hasRecords: true
+      primaryKeysArePresent: true
+      primaryKeysAreUnique: true
     time_tracking_tags:
       hasRecords: true
       streamHash: b9fc3e6eedb31e0ad3345412ff47048041f0e4e1
@@ -879,12 +879,12 @@ metadata:
       primaryKeysArePresent: true
       responsesAreSuccessful: true
     list_custom_fields:
-      hasRecords: true
-      streamHash: 8541a6102f84cb9baf8f07954859dc5377f51833
+      streamHash: 6a0ac50adbce72187df534d9cdb505e09d7591eb
       hasResponse: true
-      primaryKeysAreUnique: false
-      primaryKeysArePresent: true
       responsesAreSuccessful: true
+      hasRecords: false
+      primaryKeysArePresent: true
+      primaryKeysAreUnique: true
     team_custom_fields:
       hasRecords: true
       streamHash: dae304f3af38127a8b6af8852679ce7c82483888
@@ -914,14 +914,14 @@ metadata:
       primaryKeysArePresent: true
       responsesAreSuccessful: true
     folderless_list:
+      hasRecords: true
       streamHash: fb004d4079b816b3ec8708f2c05811b33e4c04f6
       hasResponse: true
-      responsesAreSuccessful: true
-      hasRecords: true
-      primaryKeysArePresent: true
       primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
     folderless_list_task:
-      streamHash: ebc868fa9364865160cbfae54c701d17aa574c26
+      streamHash: e3eb515c9b876b9ff4d2587c957ba7801275fadd
       hasResponse: true
       responsesAreSuccessful: true
       hasRecords: true
@@ -1261,150 +1261,505 @@ schemas:
           - string
   task:
     type: object
-    $schema: http://json-schema.org/draft-07/schema#
+    $schema: http://json-schema.org/schema#
     additionalProperties: true
     properties:
+      description:
+        type:
+          - string
+          - "null"
+      archived:
+        type:
+          - boolean
+          - "null"
       assignees:
         type:
-          - "null"
           - array
+          - "null"
         items:
           type:
-            - "null"
             - object
+            - "null"
+          properties:
+            color:
+              type:
+                - string
+                - "null"
+            email:
+              type:
+                - string
+                - "null"
+            id:
+              type:
+                - number
+                - "null"
+            initials:
+              type:
+                - string
+                - "null"
+            profilePicture:
+              type:
+                - string
+                - "null"
+            username:
+              type:
+                - string
+                - "null"
       checklists:
         type:
-          - "null"
           - array
+          - "null"
         items:
           type:
-            - "null"
             - object
+            - "null"
+          properties:
+            creator:
+              type:
+                - number
+                - "null"
+            date_created:
+              type:
+                - string
+                - "null"
+            id:
+              type:
+                - string
+                - "null"
+            items:
+              type:
+                - array
+                - "null"
+              items:
+                type:
+                  - object
+                  - "null"
+                properties:
+                  assignee:
+                    type:
+                      - object
+                      - "null"
+                    properties:
+                      color:
+                        type:
+                          - string
+                          - "null"
+                      email:
+                        type:
+                          - string
+                          - "null"
+                      id:
+                        type:
+                          - number
+                          - "null"
+                      initials:
+                        type:
+                          - string
+                          - "null"
+                      profilePicture:
+                        type:
+                          - string
+                          - "null"
+                      username:
+                        type:
+                          - string
+                          - "null"
+                  children:
+                    type:
+                      - array
+                      - "null"
+                  date_created:
+                    type:
+                      - string
+                      - "null"
+                  id:
+                    type:
+                      - string
+                      - "null"
+                  name:
+                    type:
+                      - string
+                      - "null"
+                  orderindex:
+                    type:
+                      - number
+                      - "null"
+                  resolved:
+                    type:
+                      - boolean
+                      - "null"
+            name:
+              type:
+                - string
+                - "null"
+            orderindex:
+              type:
+                - number
+                - "null"
+            resolved:
+              type:
+                - number
+                - "null"
+            task_id:
+              type:
+                - string
+                - "null"
+            unresolved:
+              type:
+                - number
+                - "null"
       creator:
         type:
-          - "null"
           - object
+          - "null"
         properties:
           color:
             type:
-              - "null"
               - string
+              - "null"
+          email:
+            type:
+              - string
+              - "null"
           id:
             type:
+              - number
               - "null"
-              - integer
           profilePicture:
             type:
-              - "null"
               - string
+              - "null"
           username:
             type:
-              - "null"
               - string
+              - "null"
+      custom_fields:
+        type:
+          - array
+          - "null"
+      custom_item_id:
+        type:
+          - number
+          - "null"
       date_closed:
         type:
-          - "null"
           - string
+          - "null"
       date_created:
         type:
-          - "null"
           - string
+          - "null"
+      date_done:
+        type:
+          - string
+          - "null"
       date_updated:
         type:
-          - "null"
           - string
-      due_date:
-        type:
           - "null"
-          - string
-      folder:
+      dependencies:
         type:
-          - "null"
-          - object
-        properties:
-          id:
-            type:
-              - "null"
-              - string
-      id:
-        type:
-          - "null"
-          - string
-      list:
-        type: object
-        properties:
-          id:
-            type:
-              - "null"
-              - string
-      name:
-        type:
-          - "null"
-          - string
-      orderindex:
-        type:
-          - "null"
-          - string
-      parent:
-        type:
-          - "null"
-          - string
-      priority:
-        type:
-          - "null"
-          - object
-      space:
-        type: object
-        properties:
-          id:
-            type:
-              - "null"
-              - string
-      start_date:
-        type:
-          - "null"
-          - string
-      status:
-        type:
-          - "null"
-          - object
-        properties:
-          type:
-            type:
-              - "null"
-              - string
-          color:
-            type:
-              - "null"
-              - string
-          orderindex:
-            type:
-              - "null"
-              - integer
-          status:
-            type:
-              - "null"
-              - string
-      tags:
-        type:
-          - "null"
           - array
+          - "null"
         items:
           type:
-            - "null"
             - object
+            - "null"
+          properties:
+            type:
+              type:
+                - number
+                - "null"
+            date_created:
+              type:
+                - string
+                - "null"
+            depends_on:
+              type:
+                - string
+                - "null"
+            task_id:
+              type:
+                - string
+                - "null"
+            userid:
+              type:
+                - string
+                - "null"
+            workspace_id:
+              type:
+                - string
+                - "null"
+      due_date:
+        type:
+          - string
+          - "null"
+      folder:
+        type:
+          - object
+          - "null"
+        properties:
+          access:
+            type:
+              - boolean
+              - "null"
+          hidden:
+            type:
+              - boolean
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          name:
+            type:
+              - string
+              - "null"
+      group_assignees:
+        type:
+          - array
+          - "null"
+      id:
+        type: string
+      linked_tasks:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            date_created:
+              type:
+                - string
+                - "null"
+            link_id:
+              type:
+                - string
+                - "null"
+            task_id:
+              type:
+                - string
+                - "null"
+            userid:
+              type:
+                - string
+                - "null"
+            workspace_id:
+              type:
+                - string
+                - "null"
+      list:
+        type:
+          - object
+          - "null"
+        properties:
+          access:
+            type:
+              - boolean
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          name:
+            type:
+              - string
+              - "null"
+      locations:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            id:
+              type:
+                - string
+                - "null"
+            name:
+              type:
+                - string
+                - "null"
+      name:
+        type:
+          - string
+          - "null"
+      orderindex:
+        type:
+          - string
+          - "null"
+      parent:
+        type:
+          - string
+          - "null"
+      permission_level:
+        type:
+          - string
+          - "null"
+      priority:
+        type:
+          - object
+          - "null"
+        properties:
+          color:
+            type:
+              - string
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          orderindex:
+            type:
+              - string
+              - "null"
+          priority:
+            type:
+              - string
+              - "null"
+      project:
+        type:
+          - object
+          - "null"
+        properties:
+          access:
+            type:
+              - boolean
+              - "null"
+          hidden:
+            type:
+              - boolean
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          name:
+            type:
+              - string
+              - "null"
+      sharing:
+        type:
+          - object
+          - "null"
+        properties:
+          public:
+            type:
+              - boolean
+              - "null"
+          public_fields:
+            type:
+              - array
+              - "null"
+            items:
+              type:
+                - string
+                - "null"
+          seo_optimized:
+            type:
+              - boolean
+              - "null"
+      space:
+        type:
+          - object
+          - "null"
+        properties:
+          id:
+            type:
+              - string
+              - "null"
+      start_date:
+        type:
+          - string
+          - "null"
+      status:
+        type:
+          - object
+          - "null"
+        properties:
+          type:
+            type:
+              - string
+              - "null"
+          color:
+            type:
+              - string
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          orderindex:
+            type:
+              - number
+              - "null"
+          status:
+            type:
+              - string
+              - "null"
+      tags:
+        type:
+          - array
+          - "null"
+      team_id:
+        type:
+          - string
+          - "null"
+      text_content:
+        type:
+          - string
+          - "null"
       time_estimate:
         type:
+          - number
           - "null"
-          - string
-      time_spent:
+      top_level_parent:
         type:
-          - "null"
           - string
+          - "null"
       url:
         type:
-          - "null"
           - string
+          - "null"
+      watchers:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            color:
+              type:
+                - string
+                - "null"
+            email:
+              type:
+                - string
+                - "null"
+            id:
+              type:
+                - number
+                - "null"
+            initials:
+              type:
+                - string
+                - "null"
+            profilePicture:
+              type:
+                - string
+                - "null"
+            username:
+              type:
+                - string
+                - "null"
+    required:
+      - id
   time_tracking_tags:
     type: object
     $schema: http://json-schema.org/schema#
@@ -1896,147 +2251,667 @@ schemas:
           - integer
   folderless_list_task:
     type: object
-    $schema: http://json-schema.org/draft-07/schema#
+    $schema: http://json-schema.org/schema#
     additionalProperties: true
     properties:
+      description:
+        type:
+          - string
+          - "null"
+      archived:
+        type:
+          - boolean
+          - "null"
       assignees:
         type:
-          - "null"
           - array
+          - "null"
         items:
           type:
-            - "null"
             - object
+            - "null"
+          properties:
+            color:
+              type:
+                - string
+                - "null"
+            email:
+              type:
+                - string
+                - "null"
+            id:
+              type:
+                - number
+                - "null"
+            initials:
+              type:
+                - string
+                - "null"
+            profilePicture:
+              type:
+                - string
+                - "null"
+            username:
+              type:
+                - string
+                - "null"
       checklists:
         type:
-          - "null"
           - array
+          - "null"
         items:
           type:
-            - "null"
             - object
+            - "null"
+          properties:
+            creator:
+              type:
+                - number
+                - "null"
+            date_created:
+              type:
+                - string
+                - "null"
+            id:
+              type:
+                - string
+                - "null"
+            items:
+              type:
+                - array
+                - "null"
+              items:
+                type:
+                  - object
+                  - "null"
+                properties:
+                  assignee:
+                    type:
+                      - object
+                      - "null"
+                    properties:
+                      color:
+                        type:
+                          - string
+                          - "null"
+                      email:
+                        type:
+                          - string
+                          - "null"
+                      id:
+                        type:
+                          - number
+                          - "null"
+                      initials:
+                        type:
+                          - string
+                          - "null"
+                      username:
+                        type:
+                          - string
+                          - "null"
+                  children:
+                    type:
+                      - array
+                      - "null"
+                  date_created:
+                    type:
+                      - string
+                      - "null"
+                  id:
+                    type:
+                      - string
+                      - "null"
+                  name:
+                    type:
+                      - string
+                      - "null"
+                  orderindex:
+                    type:
+                      - number
+                      - "null"
+                  resolved:
+                    type:
+                      - boolean
+                      - "null"
+            name:
+              type:
+                - string
+                - "null"
+            orderindex:
+              type:
+                - number
+                - "null"
+            resolved:
+              type:
+                - number
+                - "null"
+            task_id:
+              type:
+                - string
+                - "null"
+            unresolved:
+              type:
+                - number
+                - "null"
       creator:
         type:
-          - "null"
           - object
+          - "null"
         properties:
           color:
             type:
-              - "null"
               - string
+              - "null"
+          email:
+            type:
+              - string
+              - "null"
           id:
             type:
+              - number
               - "null"
-              - integer
           profilePicture:
             type:
-              - "null"
               - string
+              - "null"
           username:
             type:
-              - "null"
               - string
-      date_closed:
-        type:
-          - "null"
-          - string
-      date_created:
-        type:
-          - "null"
-          - string
-      date_updated:
-        type:
-          - "null"
-          - string
-      due_date:
-        type:
-          - "null"
-          - string
-      folder:
-        type:
-          - "null"
-          - object
-        properties:
-          id:
-            type:
               - "null"
-              - string
-      id:
+      custom_fields:
         type:
-          - "null"
-          - string
-      list:
-        type: object
-        properties:
-          id:
-            type:
-              - "null"
-              - string
-      name:
-        type:
-          - "null"
-          - string
-      orderindex:
-        type:
-          - "null"
-          - string
-      parent:
-        type:
-          - "null"
-          - string
-      priority:
-        type:
-          - "null"
-          - object
-      space:
-        type: object
-        properties:
-          id:
-            type:
-              - "null"
-              - string
-      start_date:
-        type:
-          - "null"
-          - string
-      status:
-        type:
-          - "null"
-          - object
-        properties:
-          type:
-            type:
-              - "null"
-              - string
-          color:
-            type:
-              - "null"
-              - string
-          orderindex:
-            type:
-              - "null"
-              - integer
-          status:
-            type:
-              - "null"
-              - string
-      tags:
-        type:
-          - "null"
           - array
+          - "null"
         items:
           type:
-            - "null"
             - object
+            - "null"
+          properties:
+            type:
+              type:
+                - string
+                - "null"
+            date_created:
+              type:
+                - string
+                - "null"
+            hide_from_guests:
+              type:
+                - boolean
+                - "null"
+            id:
+              type:
+                - string
+                - "null"
+            name:
+              type:
+                - string
+                - "null"
+            required:
+              type:
+                - boolean
+                - "null"
+            type_config:
+              type:
+                - object
+                - "null"
+              properties:
+                code_point:
+                  type:
+                    - string
+                    - "null"
+                count:
+                  type:
+                    - number
+                    - "null"
+                default:
+                  type:
+                    - number
+                    - "null"
+                include_guests:
+                  type:
+                    - boolean
+                    - "null"
+                include_team_members:
+                  type:
+                    - boolean
+                    - "null"
+                new_drop_down:
+                  type:
+                    - boolean
+                    - "null"
+                options:
+                  type:
+                    - array
+                    - "null"
+                  items:
+                    type:
+                      - object
+                      - "null"
+                    properties:
+                      color:
+                        type:
+                          - string
+                          - "null"
+                      id:
+                        type:
+                          - string
+                          - "null"
+                      label:
+                        type:
+                          - string
+                          - "null"
+                      name:
+                        type:
+                          - string
+                          - "null"
+                      orderindex:
+                        type:
+                          - number
+                          - "null"
+                single_user:
+                  type:
+                    - boolean
+                    - "null"
+            value:
+              anyOf:
+                - type:
+                    - number
+                    - string
+                - type: array
+                  items:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          version:
+                            type: number
+                          type:
+                            type: number
+                          date:
+                            type: string
+                          deleted:
+                            type: boolean
+                          edit_url:
+                            type: "null"
+                          email_data:
+                            type: "null"
+                          extension:
+                            type: string
+                          file_id:
+                            type: string
+                          hidden:
+                            type: boolean
+                          id:
+                            type: string
+                          is_folder:
+                            type: boolean
+                          mimetype:
+                            type:
+                              - "null"
+                              - string
+                          orientation:
+                            type: "null"
+                          parent_comment_parent:
+                            type: "null"
+                          parent_comment_type:
+                            type: "null"
+                          parent_id:
+                            type: string
+                          resolved_comments:
+                            type: number
+                          size:
+                            type: "null"
+                          source:
+                            type: number
+                          thumbnail_large:
+                            type:
+                              - "null"
+                              - string
+                          thumbnail_small:
+                            type:
+                              - "null"
+                              - string
+                          title:
+                            type: string
+                          total_comments:
+                            type: number
+                          url:
+                            type: string
+                          user:
+                            type: object
+                            properties:
+                              color:
+                                type: string
+                              email:
+                                type: string
+                              id:
+                                type: number
+                              initials:
+                                type: string
+                              profilePicture:
+                                type: "null"
+                              username:
+                                type: string
+                          workspace_id:
+                            type: number
+      custom_item_id:
+        type:
+          - number
+          - "null"
+      date_closed:
+        type:
+          - string
+          - "null"
+      date_created:
+        type:
+          - string
+          - "null"
+      date_done:
+        type:
+          - string
+          - "null"
+      date_updated:
+        type:
+          - string
+          - "null"
+      dependencies:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            type:
+              type:
+                - number
+                - "null"
+            date_created:
+              type:
+                - string
+                - "null"
+            depends_on:
+              type:
+                - string
+                - "null"
+            task_id:
+              type:
+                - string
+                - "null"
+            userid:
+              type:
+                - string
+                - "null"
+            workspace_id:
+              type:
+                - string
+                - "null"
+      due_date:
+        type:
+          - string
+          - "null"
+      folder:
+        type:
+          - object
+          - "null"
+        properties:
+          access:
+            type:
+              - boolean
+              - "null"
+          hidden:
+            type:
+              - boolean
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          name:
+            type:
+              - string
+              - "null"
+      group_assignees:
+        type:
+          - array
+          - "null"
+      id:
+        type: string
+      linked_tasks:
+        type:
+          - array
+          - "null"
+      list:
+        type:
+          - object
+          - "null"
+        properties:
+          access:
+            type:
+              - boolean
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          name:
+            type:
+              - string
+              - "null"
+      locations:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            id:
+              type:
+                - string
+                - "null"
+            name:
+              type:
+                - string
+                - "null"
+      name:
+        type:
+          - string
+          - "null"
+      orderindex:
+        type:
+          - string
+          - "null"
+      parent:
+        type:
+          - string
+          - "null"
+      permission_level:
+        type:
+          - string
+          - "null"
+      priority:
+        type:
+          - object
+          - "null"
+        properties:
+          color:
+            type:
+              - string
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          orderindex:
+            type:
+              - string
+              - "null"
+          priority:
+            type:
+              - string
+              - "null"
+      project:
+        type:
+          - object
+          - "null"
+        properties:
+          access:
+            type:
+              - boolean
+              - "null"
+          hidden:
+            type:
+              - boolean
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          name:
+            type:
+              - string
+              - "null"
+      sharing:
+        type:
+          - object
+          - "null"
+        properties:
+          public:
+            type:
+              - boolean
+              - "null"
+          public_fields:
+            type:
+              - array
+              - "null"
+            items:
+              type:
+                - string
+                - "null"
+          seo_optimized:
+            type:
+              - boolean
+              - "null"
+      space:
+        type:
+          - object
+          - "null"
+        properties:
+          id:
+            type:
+              - string
+              - "null"
+      start_date:
+        type:
+          - string
+          - "null"
+      status:
+        type:
+          - object
+          - "null"
+        properties:
+          type:
+            type:
+              - string
+              - "null"
+          color:
+            type:
+              - string
+              - "null"
+          id:
+            type:
+              - string
+              - "null"
+          orderindex:
+            type:
+              - number
+              - "null"
+          status:
+            type:
+              - string
+              - "null"
+      tags:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            creator:
+              type:
+                - number
+                - "null"
+            name:
+              type:
+                - string
+                - "null"
+            tag_bg:
+              type:
+                - string
+                - "null"
+            tag_fg:
+              type:
+                - string
+                - "null"
+      team_id:
+        type:
+          - string
+          - "null"
+      text_content:
+        type:
+          - string
+          - "null"
       time_estimate:
         type:
+          - number
           - "null"
-          - string
-      time_spent:
+      top_level_parent:
         type:
-          - "null"
           - string
+          - "null"
       url:
         type:
-          - "null"
           - string
+          - "null"
+      watchers:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            color:
+              type:
+                - string
+                - "null"
+            email:
+              type:
+                - string
+                - "null"
+            id:
+              type:
+                - number
+                - "null"
+            initials:
+              type:
+                - string
+                - "null"
+            profilePicture:
+              type:
+                - string
+                - "null"
+            username:
+              type:
+                - string
+                - "null"
+    required:
+      - id
